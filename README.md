@@ -16,11 +16,15 @@ Statistics
 # Usage
 ## Import Package
 ```julia
+include("TextTiling.jl")
+include("C99.jl")
+include("TopicTiling.jl")
+
 using PyCall
 using .Utls
 using .TextTiling
-using .TopicTiling
 using .C99
+using .TopicTiling
 ```
 ## Sample Data
 ```julia
@@ -44,7 +48,7 @@ document = [
     ]
 ```
  - 入力データはドキュメントが一行ずつ分割され、リスト形式のデータになっているものを対象とします。
- - documentは[Project Gutenberg](https://www.gutenberg.org/)から引用した、3つのトピックからなる13行の文で構成されています。
+ - documentは[Project Gutenberg](https://www.gutenberg.org/)から引用した、3つのトピックからなる13文で構成されています。
  - このドキュメントに含まれる12個のセグメント境界候補に対して、0（セグメント境界でない）or 1（セグメント境界である）を決定します。
  - 以下に各手法のデモを示します。
 
@@ -53,14 +57,15 @@ document = [
 window_size = 2
 smooth_window_size = 1
 num_topics = 3
-seg = TextTiling.Segmentation(window_size, smooth_window_size, Utls.tokenize)
-result = TextTiling.segment(seg, document, num_topics)
+tt = TextTiling.Segmentation(window_size, smooth_window_size, Utls.tokenize)
+result = TextTiling.segment(tt, document, num_topics)
 println(result)
 >>> 000100010000
 ```
- - TopicTilingは語彙のまとまりに基づいて，隣接するブロック間の類似性からセグメント境界を探索する手法です。
+ - TextTilingは語彙のまとまりに基づいて，隣接するブロック間の類似度からセグメント境界を探索する手法です。
  - window_sizeはブロックの大きさ、smooth_window_sizeは深度スコアを平滑化するために設定します。
  - num_topicsはドキュメントに含まれるトピックの数です。この値が指定された場合、深度スコアが大きいものから順にnum_topicsの数だけセグメント境界を決定します。
+ - Utls.tokenizeは、文を単語分割するためのtokenizerです。tokenizerを変更することで他言語にも対応可能です。
 
 ## C99
 ```julia
@@ -68,8 +73,8 @@ n = length(document)
 init_matrix = zeros(n, n)
 window_size = 2
 std_coeff = 1.2
-seg = C99.Segmentation(window_size, init_matrix, init_matrix, init_matrix, std_coeff, Utls.tokenize)
-result = C99.segment(seg, document, n)
+c99 = C99.Segmentation(window_size, init_matrix, init_matrix, init_matrix, std_coeff, Utls.tokenize)
+result = C99.segment(c99, document, n)
 println(result)
 >>> 000100001000
 ```
@@ -103,14 +108,14 @@ lda_model = pygensim.models.ldamodel.LdaModel(
 window_size = 2
 smooth_window_size = 1
 num_topics = 3
-seg = TopicTiling.Segmentation(window_size, smooth_window_size, lda_model, dictionary)
-result = TopicTiling.segment(seg, document, num_topics)
+to = TopicTiling.Segmentation(window_size, smooth_window_size, lda_model, dictionary)
+result = TopicTiling.segment(to, document, num_topics)
 println(result)
 >>> 000110000000
 ```
- - TopicTilingでは、文書に含まれる単語のトピックIDを用いてブロック間の類似度を算出します。
- - lda_modelは、Pythonライブラリであるgensimを使用して作成しています。
- - TopicTilingでは、セグメント対象のドキュメントの他にlda_modelを構築するための学習ドキュメントが必要です。（学習ドキュメントは、セグメント対象のドキュメントとドメインが近いものが望ましいでしょう。）
+ - TopicTilingはTextTilingを拡張した手法であり、文に含まれる単語のトピックIDを用いてブロック間の類似度を算出します。
+ - lda_modelは、Pythonライブラリであるgensimを使用しています。
+ - TopicTilingでは、セグメント対象のドキュメントの他にlda_modelを構築するための学習ドキュメントが必要です。（学習ドキュメントは、セグメント対象のドキュメントとドメインが近いものが望ましいです。）
  - ライブラリの詳細やパラメータの設定については[models.ldamodel](https://radimrehurek.com/gensim/models/ldamodel.html)を参照してください。
  - window_sizeはブロックの大きさ、smooth_window_sizeは深度スコアを平滑化するために設定します。
  - num_topicsはドキュメントに含まれるトピックの数です。この値が指定された場合、深度スコアが大きいものから順にnum_topicsの数だけセグメント境界を決定します。
