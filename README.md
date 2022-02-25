@@ -1,5 +1,5 @@
 # Introduction
-TextSegmentation.jlは、教師なしテキストセグメンテーション手法のjulia実装を提供します。
+TextSegmentation.jlは、教師なしテキストセグメンテーション手法のjulia実装を提供します。  
 主な手法は以下の通りです。
  - TextTiling
  - C99
@@ -22,7 +22,7 @@ using .TextTiling
 using .TopicTiling
 using .C99
 ```
-### Sample Data
+## Sample Data
 ```julia
 document = [
     # Derek J. de Solla Price. (2009). On the Origin of Clockwork, Perpetual Motion Devices, and the Compass. Urbana, Illinois: Project Gutenberg. Retrieved February 25, 2022, from www.gutenberg.org/ebooks/30001.
@@ -76,9 +76,9 @@ println(result)
  - C99は分割型クラスタリングによってセグメント境界を決定する手法です。
  - window_sizeはrank matrixを作成する際に使用し、隣接する文の範囲を指定します。
  - std_coeffはセグメント境界を決定する閾値に使われます。μとvは、内部密度の勾配δD(n)の平均と分散であり、閾値は下記の式で求められます。
-```math 
-μ + c \sqrt{v}
-```
+
+<img src="https://latex.codecogs.com/svg.image?\mu&space;&plus;&space;c\sqrt{v}" title="\mu + c\sqrt{v}" />
+
  - 式中のcがstd_coeffであり、c=1.2がよく機能することが知られています。
  - init_matrixは、similarity matrixやrank matrixを初期化するために設定しています。
 
@@ -114,7 +114,7 @@ println(result)
  - num_topicsはドキュメントに含まれるトピックの数です。この値が指定された場合、深度スコアが大きいものから順にnum_topicsの数だけセグメント境界を決定します。
 
 # Reference
-[TextTiling: Segmenting Text into Multi-paragraph Subtopic Passages](https://aclanthology.org/J97-1003.pdf)
-[Advances in domain independent linear text segmentation](https://arxiv.org/pdf/cs/0003083.pdf)
-[TopicTiling: A Text Segmentation Algorithm based on LDA](https://aclanthology.org/W12-3307.pdf)
-[uts](https://github.com/intfloat/uts)
+ - [TextTiling: Segmenting Text into Multi-paragraph Subtopic Passages](https://aclanthology.org/J97-1003.pdf)
+ - [Advances in domain independent linear text segmentation](https://arxiv.org/pdf/cs/0003083.pdf)
+ - [TopicTiling: A Text Segmentation Algorithm based on LDA](https://aclanthology.org/W12-3307.pdf)
+ - [uts](https://github.com/intfloat/uts)
