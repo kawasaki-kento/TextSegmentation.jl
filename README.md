@@ -77,7 +77,9 @@ println(result)
  - window_sizeはrank matrixを作成する際に使用し、隣接する文の範囲を指定します。
  - std_coeffはセグメント境界を決定する閾値に使われます。μとvは、内部密度の勾配δD(n)の平均と分散であり、閾値は下記の式で求められます。
 
-<img src="https://latex.codecogs.com/svg.image?\mu&space;&plus;&space;c\sqrt{v}" title="\mu + c\sqrt{v}" />
+<p align="center">
+  <img src="https://latex.codecogs.com/svg.image?\mu&space;&plus;&space;c\sqrt{v}" title="\mu + c\sqrt{v}" />
+</p>
 
  - 式中のcがstd_coeffであり、c=1.2がよく機能することが知られています。
  - init_matrixは、similarity matrixやrank matrixを初期化するために設定しています。
