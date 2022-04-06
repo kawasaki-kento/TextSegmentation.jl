@@ -3,14 +3,23 @@ include("Utls.jl")
 using Statistics
 using .Utls
 
-mutable struct Segmentation
+"""
+    TopicTiling.SegmentObject(window_size, smooth_window_size, lda_model, dictionary)
+TopicTiling is an extension of TextTiling that uses the topic IDs of words in a sentence to calculate the similarity between blocks.
+# Arguments
+- `window_size`: Sliding window size.
+- `smooth_window_size`: Window size for smoothing depth scores.
+- `lda_model`: Trained LDA topic model.
+- `dictionary`: A dictionary showing word-id mappings.
+"""
+mutable struct SegmentObject
     window_size::Int
     smooth_window_size::Int
     lda_model::Any
     dictionary::Any
 end
 
-function preprocessing(seg::Segmentation, tokenized_document)
+function preprocessing(seg::SegmentObject, tokenized_document)
     n = length(tokenized_document)
     seg.window_size = maximum([minimum([seg.window_size, n / 3]), 1])
     return [
@@ -33,7 +42,7 @@ function aggregate_topic_id(ids)
     return sentence_ids
 end
 
-function calculate_gap_score(seg::Segmentation, preprocessed_document)
+function calculate_gap_score(seg::SegmentObject, preprocessed_document)
     n = length(preprocessed_document)
     gap_score = [0.0 for _ = 1:n]
 
@@ -56,7 +65,7 @@ function calculate_gap_score(seg::Segmentation, preprocessed_document)
     return gap_score
 end
 
-function calculate_depth_score(seg::Segmentation, gap_score)
+function calculate_depth_score(seg::SegmentObject, gap_score)
     n = length(gap_score)
     depth_score = [0.0 for _ = 1:n]
 
@@ -82,7 +91,7 @@ function calculate_depth_score(seg::Segmentation, gap_score)
     return depth_score
 end
 
-function smoothing(seg::Segmentation, depth_score)
+function smoothing(seg::SegmentObject, depth_score)
     n = length(depth_score)
     smooth_depth_score = [0.0 for _ = 1:n]
 
@@ -97,7 +106,7 @@ function smoothing(seg::Segmentation, depth_score)
     return smooth_depth_score
 end
 
-function determine_boundaries(seg::Segmentation, smooth_depth_score, num_topics)
+function determine_boundaries(seg::SegmentObject, smooth_depth_score, num_topics)
     n = length(smooth_depth_score)
     boundaries = ["0" for _ = 1:n]
     cutoff_threshold = mean(smooth_depth_score) - std(smooth_depth_score) / 2.0
@@ -121,7 +130,45 @@ function determine_boundaries(seg::Segmentation, smooth_depth_score, num_topics)
     return join(boundaries[1:end-1])
 end
 
-function segment(seg, test_document, num_topics = Nothing)
+"""
+    TopicTiling.segment(seg, document, [num_topics]) -> String
+Performs the splitting of the document entered in the `document` argument.
+# Arguments
+- `seg`: Segment object.
+- `document`: The document to be text segmented.
+- `num_topics`: num_topics is the number of topics in the document. If this value is specified, segment boundaries are determined by the number of num_topics, starting with the highest depth score.
+
+# Examples
+```jldoctest
+using TextSegmentation
+
+# LDA Topic Model
+pygensim = pyimport("gensim")
+# train_document
+# Data to be used when training the LDA topic model.
+# Data from the same domain as the text to be segmented is preferred.
+tokenized_train_document = [Utls.tokenize(i) for i in train_document]
+dictionary = pygensim.corpora.Dictionary(tokenized_train_document)
+corpus = [dictionary.doc2bow(text) for text in tokenized_train_document]
+lda_model = pygensim.models.ldamodel.LdaModel(
+    corpus = corpus,
+    id2word = dictionary,
+    minimum_probability = 0.0001,
+    num_topics = 3,
+    random_state=1234,
+)
+
+# TopicTiling
+window_size = 2
+smooth_window_size = 1
+num_topics = 3
+to = TopicTiling.SegmentObject(window_size, smooth_window_size, lda_model, dictionary)
+result = TopicTiling.segment(to, document, num_topics)
+println(result)
+000110000000
+```
+"""
+function segment(seg, test_document, num_topics=Nothing)
     tokenized_test_document = [Utls.tokenize(i) for i in test_document]
     preprocessed_document = preprocessing(seg, tokenized_test_document)
     gap_score = calculate_gap_score(seg, preprocessed_document)

@@ -1,30 +1,28 @@
+# TextSegmentation
+
+[![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://kawasaki-kento.github.io/TextSegmentation.jl/stable)
+[![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://kawasaki-kento.github.io/TextSegmentation.jl/dev)
+[![Build Status](https://travis-ci.com/kawasaki-kento/TextSegmentation.jl.svg?branch=main)](https://travis-ci.com/kawasaki-kento/TextSegmentation.jl)
+
 # Introduction
-TextSegmentation.jlは、教師なしテキストセグメンテーション手法のjulia実装を提供します。  
-主な手法は以下の通りです。
+TextSegmentation.jl provides a julia implementation of the unsupervised text segmentation method.  
+The main methods are as follows.
  - TextTiling
  - C99
  - TopicTiling
+ 
 
 # Requirements
 ```
 Julia Version 1.7.2
 Languages v0.4.3
 PyCall v1.93.0
-Statistics
 ```
 
 # Usage
 ## Import Package
 ```julia
-include("TextTiling.jl")
-include("C99.jl")
-include("TopicTiling.jl")
-
-using PyCall
-using .Utls
-using .TextTiling
-using .C99
-using .TopicTiling
+using TextSegmentation
 ```
 ## Sample Data
 ```julia
@@ -47,25 +45,25 @@ document = [
     "The rulers were conceived (except in some of the popular governments of Greece) as in a necessarily antagonistic position to the people whom they ruled.",
     ]
 ```
- - 入力データはドキュメントが一行ずつ分割され、リスト形式のデータになっているものを対象とします。
- - documentは[Project Gutenberg](https://www.gutenberg.org/)から引用した、3つのトピックからなる13文で構成されています。
- - このドキュメントに含まれる12個のセグメント境界候補に対して、0（セグメント境界でない）or 1（セグメント境界である）を決定します。
- - 以下に各手法のデモを示します。
+ - The input data is for documents that are divided line by line and are in list form.
+ - The document consists of 13 sentences, taken from [Project Gutenberg](https://www.gutenberg.org/), consisting of three topics.
+ - For each of the 12 candidate segment boundaries in the document, we determine 0 (not a segment boundary) or 1 (a segment boundary).
+ - Demonstrations of each method are shown below.
 
 ## TextTiling
 ```julia
 window_size = 2
 smooth_window_size = 1
 num_topics = 3
-tt = TextTiling.Segmentation(window_size, smooth_window_size, Utls.tokenize)
+tt = TextTiling.SegmentObject(window_size, smooth_window_size, Utls.tokenize)
 result = TextTiling.segment(tt, document, num_topics)
 println(result)
 >>> 000100010000
 ```
- - TextTilingは語彙のまとまりに基づいて，隣接するブロック間の類似度からセグメント境界を探索する手法です。
- - window_sizeはブロックの大きさ、smooth_window_sizeは深度スコアを平滑化するために設定します。
- - num_topicsはドキュメントに含まれるトピックの数です。この値が指定された場合、深度スコアが大きいものから順にnum_topicsの数だけセグメント境界を決定します。
- - Utls.tokenizeは、文を単語分割するためのtokenizerです。tokenizerを変更することで他言語にも対応可能です。
+ - TextTiling is a method for finding segment boundaries based on lexical cohesion and similarity between adjacent blocks.
+ - window_size is the size of the block and smooth_window_size is set to smooth the depth score.
+ - num_topics is the number of topics in the document. If this value is specified, segment boundaries are determined by the number of num_topics, starting with the highest depth score.
+ - Utls.tokenize is a tokenizer for word segmentation of sentences; other languages can be supported by changing the tokenizer.
 
 ## C99
 ```julia
@@ -73,21 +71,21 @@ n = length(document)
 init_matrix = zeros(n, n)
 window_size = 2
 std_coeff = 1.2
-c99 = C99.Segmentation(window_size, init_matrix, init_matrix, init_matrix, std_coeff, Utls.tokenize)
+c99 = C99.SegmentObject(window_size, init_matrix, init_matrix, init_matrix, std_coeff, Utls.tokenize)
 result = C99.segment(c99, document, n)
 println(result)
 >>> 000100001000
 ```
- - C99は分割型クラスタリングによってセグメント境界を決定する手法です。
- - window_sizeはrank matrixを作成する際に使用し、隣接する文の範囲を指定します。
- - std_coeffはセグメント境界を決定する閾値に使われます。μとvは、内部密度の勾配δD(n)の平均と分散であり、閾値は下記の式で求められます。
+ - C99 is a method for determining segment boundaries through segmented clustering.
+ - window_size is used to create a rank matrix and specifies the range of adjacent sentences to be referenced.
+ - std_coeff is used for the threshold that determines the segment boundary. μ and v are the mean and variance of the gradient δD(n) of the internal density. The threshold value is calculated by the following equation.
 
 <p align="center">
   <img src="https://latex.codecogs.com/svg.image?\mu&space;&plus;&space;c\sqrt{v}" title="\mu + c\sqrt{v}" />
 </p>
 
- - 式中のcがstd_coeffであり、c=1.2がよく機能することが知られています。
- - init_matrixは、similarity matrixやrank matrixを初期化するために設定しています。
+ - It is known that c in the equation is std_coeff and that c=1.2 works well.
+ - init_matrix is set to initialize the similarity matrix and rank matrix.
 
 ## TopicTiling
 ```julia
@@ -108,17 +106,17 @@ lda_model = pygensim.models.ldamodel.LdaModel(
 window_size = 2
 smooth_window_size = 1
 num_topics = 3
-to = TopicTiling.Segmentation(window_size, smooth_window_size, lda_model, dictionary)
+to = TopicTiling.SegmentObject(window_size, smooth_window_size, lda_model, dictionary)
 result = TopicTiling.segment(to, document, num_topics)
 println(result)
 >>> 000110000000
 ```
- - TopicTilingはTextTilingを拡張した手法であり、文に含まれる単語のトピックIDを用いてブロック間の類似度を算出します。
- - lda_modelは、Pythonライブラリであるgensimを使用しています。
- - TopicTilingでは、セグメント対象のドキュメントの他にlda_modelを構築するための学習ドキュメントが必要です。（学習ドキュメントは、セグメント対象のドキュメントとドメインが近いものが望ましいです。）
- - ライブラリの詳細やパラメータの設定については[models.ldamodel](https://radimrehurek.com/gensim/models/ldamodel.html)を参照してください。
- - window_sizeはブロックの大きさ、smooth_window_sizeは深度スコアを平滑化するために設定します。
- - num_topicsはドキュメントに含まれるトピックの数です。この値が指定された場合、深度スコアが大きいものから順にnum_topicsの数だけセグメント境界を決定します。
+ - TopicTiling is an extension of TextTiling that uses the topic IDs of words in a sentence to calculate the similarity between blocks.
+ - lda_model uses gensim, a Python library.
+ - TopicTiling requires a training document to build the lda_model in addition to the documents to be segmented. (The training document should be close in domain to the document to be segmented.)
+ - See [models.ldamodel](https://radimrehurek.com/gensim/models/ldamodel.html) for library details and parameter settings.
+ - window_size is the size of the block and smooth_window_size is set to smooth the depth score.
+ - num_topics is the number of topics in the document. If this value is specified, segment boundaries are determined by the number of num_topics, starting with the highest depth score.
 
 # Reference
  - [TextTiling: Segmenting Text into Multi-paragraph Subtopic Passages](https://aclanthology.org/J97-1003.pdf)

@@ -3,20 +3,28 @@ include("Utls.jl")
 using Statistics
 using .Utls
 
-mutable struct Segmentation
+"""
+    TextTiling.SegmentObject(window_size, smooth_window_size, tokenizer)
+TextTiling is a method for finding segment boundaries based on lexical cohesion and similarity between adjacent blocks.
+# Arguments
+- `window_size`: Sliding window size.
+- `smooth_window_size`: Window size for smoothing depth scores.
+- `tokenizer`: Tokenizer for word segmentation.
+"""
+mutable struct SegmentObject
     window_size::Int
     smooth_window_size::Int
     tokenizer::Any
 end
 
-function preprocessing(seg::Segmentation, document)
+function preprocessing(seg::SegmentObject, document)
     n = length(document)
     @assert n > 0 && length([d for d in document if typeof(d) != String]) == 0
     seg.window_size = maximum([minimum([seg.window_size, n / 3]), 1])
     return [Utls.count_elements(seg.tokenizer(document[i])) for i = 1:n]
 end
 
-function calculate_gap_score(seg::Segmentation, preprocessed_document)
+function calculate_gap_score(seg::SegmentObject, preprocessed_document)
     n = length(preprocessed_document)
     gap_score = [0.0 for _ = 1:n]
 
@@ -39,7 +47,7 @@ function calculate_gap_score(seg::Segmentation, preprocessed_document)
     return gap_score
 end
 
-function calculate_depth_score(seg::Segmentation, gap_score)
+function calculate_depth_score(seg::SegmentObject, gap_score)
     n = length(gap_score)
     depth_score = [0.0 for _ = 1:n]
 
@@ -65,7 +73,7 @@ function calculate_depth_score(seg::Segmentation, gap_score)
     return depth_score
 end
 
-function smoothing(seg::Segmentation, depth_score)
+function smoothing(seg::SegmentObject, depth_score)
     n = length(depth_score)
     smooth_depth_score = [0.0 for _ = 1:n]
 
@@ -80,7 +88,7 @@ function smoothing(seg::Segmentation, depth_score)
     return smooth_depth_score
 end
 
-function determine_boundaries(seg::Segmentation, smooth_depth_score, num_topics)
+function determine_boundaries(seg::SegmentObject, smooth_depth_score, num_topics)
     n = length(smooth_depth_score)
     boundaries = ["0" for _ = 1:n]
     cutoff_threshold = mean(smooth_depth_score) - std(smooth_depth_score) / 2.0
@@ -103,7 +111,29 @@ function determine_boundaries(seg::Segmentation, smooth_depth_score, num_topics)
     return join(boundaries[1:end-1])
 end
 
-function segment(seg, document, num_topics = Nothing)
+"""
+    TextTiling.segment(seg, document, [num_topics]) -> String
+Performs the splitting of the document entered in the `document` argument.
+# Arguments
+- `seg`: Segment object.
+- `document`: The document to be text segmented.
+- `num_topics`: num_topics is the number of topics in the document. If this value is specified, segment boundaries are determined by the number of num_topics, starting with the highest depth score.
+
+# Examples
+```jldoctest
+using TextSegmentation
+
+window_size = 2
+smooth_window_size = 1
+num_topics = 3
+
+tt = TextTiling.SegmentObject(window_size, smooth_window_size, Utls.tokenize)
+result = TextTiling.segment(tt, document, num_topics)
+println(result)
+000100010000
+```
+"""
+function segment(seg, document, num_topics=Nothing)
     preprocessed_document = preprocessing(seg, document)
     gap_score = calculate_gap_score(seg, preprocessed_document)
     depth_score = calculate_depth_score(seg, gap_score)

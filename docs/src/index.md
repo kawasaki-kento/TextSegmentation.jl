@@ -1,3 +1,15 @@
-# TextSegmentation.jl
+```@meta
+CurrentModule = TextSegmentation
+```
 
-Documentation for TextSegmentation.jl
+# TextSegmentation
+
+Documentation for [TextSegmentation](https://github.com/kawasaki-kento/TextSegmentation.jl).
+
+```@index
+Modules = [TextSegmentation.Utls, TextSegmentation.TextTiling, TextSegmentation.C99, TextSegmentation.TopicTiling]
+```
+
+```@autodocs
+Modules = [TextSegmentation.Utls, TextSegmentation.TextTiling, TextSegmentation.C99, TextSegmentation.TopicTiling]
+```
