@@ -1,7 +1,7 @@
 name = "TextSegmentation"
 uuid = "05fd07d0-ee0f-48fc-9851-87e441b455c1"
 authors = ["Kento Kawasaki"]
-version = "0.1.0"
+version = "0.1.1"
 
 [deps]
 Languages = "8ef0a80b-9436-5d2c-a485-80b904378c43"
