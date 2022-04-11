@@ -1,4 +1,4 @@
-# TextSegmentation
+# TextSegmentation.jl
 
 [![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://kawasaki-kento.github.io/TextSegmentation.jl/stable)
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://kawasaki-kento.github.io/TextSegmentation.jl/dev)
@@ -11,6 +11,8 @@ The main methods are as follows.
  - C99
  - TopicTiling
  
+# Documentation
+ - [TextSegmentation.jl](https://kawasaki-kento.github.io/TextSegmentation.jl/build/)
 
 # Requirements
 ```
@@ -18,12 +20,21 @@ Julia Version 1.7.2
 Languages v0.4.3
 PyCall v1.93.0
 ```
+# Installation
+```julia
+pkg> add TextSegmentation
+```
+
+```julia
+julia> import Pkg; Pkg.add("TextSegmentation")
+```
 
 # Usage
 ## Import Package
 ```julia
 using TextSegmentation
 ```
+
 ## Sample Data
 ```julia
 document = [
@@ -76,7 +87,7 @@ result = C99.segment(c99, document, n)
 println(result)
 >>> 000100001000
 ```
- - C99 is a method for determining segment boundaries through segmented clustering.
+ - C99 is a method for determining segment boundaries through divisive clustering.
  - window_size is used to create a rank matrix and specifies the range of adjacent sentences to be referenced.
  - std_coeff is used for the threshold that determines the segment boundary. μ and v are the mean and variance of the gradient δD(n) of the internal density. The threshold value is calculated by the following equation.
 
