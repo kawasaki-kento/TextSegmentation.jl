@@ -11,6 +11,9 @@ The main methods are as follows.
  - C99
  - TopicTiling
 
+# Documentation
+ - [TextSegmentation.jl](https://kawasaki-kento.github.io/TextSegmentation.jl/build/)
+
 # Requirements
 ```
 Julia Version 1.7.2
