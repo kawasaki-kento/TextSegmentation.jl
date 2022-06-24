@@ -1,0 +1,226 @@
+In your schooldays most of you who read this book made acquaintance
+with the noble building of Euclid's geometry, and you remember --
+perhaps with more respect than love -- the magnificent structure, on
+the lofty staircase of which you were chased about for uncounted hours
+by conscientious teachers. By reason of our past experience, you would
+certainly regard everyone with disdain who should pronounce even the
+most out-of-the-way proposition of this science to be untrue. But
+perhaps this feeling of proud certainty would leave you immediately if
+some one were to ask you: "What, then, do you mean by the assertion
+that these propositions are true?" Let us proceed to give this
+question a little consideration.
+
+Geometry sets out form certain conceptions such as "plane," "point,"
+and "straight line," with which we are able to associate more or less
+definite ideas, and from certain simple propositions (axioms) which,
+in virtue of these ideas, we are inclined to accept as "true." Then,
+on the basis of a logical process, the justification of which we feel
+ourselves compelled to admit, all remaining propositions are shown to
+follow from those axioms, i.e. they are proven. A proposition is then
+correct ("true") when it has been derived in the recognised manner
+from the axioms. The question of "truth" of the individual geometrical
+propositions is thus reduced to one of the "truth" of the axioms. Now
+it has long been known that the last question is not only unanswerable
+by the methods of geometry, but that it is in itself entirely without
+meaning. We cannot ask whether it is true that only one straight line
+goes through two points. We can only say that Euclidean geometry deals
+with things called "straight lines," to each of which is ascribed the
+property of being uniquely determined by two points situated on it.
+The concept "true" does not tally with the assertions of pure
+geometry, because by the word "true" we are eventually in the habit of
+designating always the correspondence with a "real" object; geometry,
+however, is not concerned with the relation of the ideas involved in
+it to objects of experience, but only with the logical connection of
+these ideas among themselves.
+
+It is not difficult to understand why, in spite of this, we feel
+constrained to call the propositions of geometry "true." Geometrical
+ideas correspond to more or less exact objects in nature, and these
+last are undoubtedly the exclusive cause of the genesis of those
+ideas. Geometry ought to refrain from such a course, in order to give
+to its structure the largest possible logical unity. The practice, for
+example, of seeing in a "distance" two marked positions on a
+practically rigid body is something which is lodged deeply in our
+habit of thought. We are accustomed further to regard three points as
+being situated on a straight line, if their apparent positions can be
+made to coincide for observation with one eye, under suitable choice
+of our place of observation.
+
+If, in pursuance of our habit of thought, we now supplement the
+propositions of Euclidean geometry by the single proposition that two
+points on a practically rigid body always correspond to the same
+distance (line-interval), independently of any changes in position to
+which we may subject the body, the propositions of Euclidean geometry
+then resolve themselves into propositions on the possible relative
+position of practically rigid bodies.* Geometry which has been
+supplemented in this way is then to be treated as a branch of physics.
+We can now legitimately ask as to the "truth" of geometrical
+propositions interpreted in this way, since we are justified in asking
+whether these propositions are satisfied for those real things we have
+associated with the geometrical ideas. In less exact terms we can
+express this by saying that by the "truth" of a geometrical
+proposition in this sense we understand its validity for a
+construction with rule and compasses.
+
+Of course the conviction of the "truth" of geometrical propositions in
+this sense is founded exclusively on rather incomplete experience. For
+the present we shall assume the "truth" of the geometrical
+propositions, then at a later stage (in the general theory of
+relativity) we shall see that this "truth" is limited, and we shall
+consider the extent of its limitation.
+
+*) It follows that a natural object is associated also with a
+straight line. Three points A, B and C on a rigid body thus lie in a
+straight line when the points A and C being given, B is chosen such
+that the sum of the distances AB and BC is as short as possible. This
+incomplete suggestion will suffice for the present purpose.
+
+On the basis of the physical interpretation of distance which has been
+indicated, we are also in a position to establish the distance between
+two points on a rigid body by means of measurements. For this purpose
+we require a " distance " (rod S) which is to be used once and for
+all, and which we employ as a standard measure. If, now, A and B are
+two points on a rigid body, we can construct the line joining them
+according to the rules of geometry ; then, starting from A, we can
+mark off the distance S time after time until we reach B. The number
+of these operations required is the numerical measure of the distance
+AB. This is the basis of all measurement of length. *
+
+Every description of the scene of an event or of the position of an
+object in space is based on the specification of the point on a rigid
+body (body of reference) with which that event or object coincides.
+This applies not only to scientific description, but also to everyday
+life. If I analyse the place specification " Times Square, New York,"
+**A I arrive at the following result. The earth is the rigid body
+to which the specification of place refers; " Times Square, New York,"
+is a well-defined point, to which a name has been assigned, and with
+which the event coincides in space.**B
+
+This primitive method of place specification deals only with places on
+the surface of rigid bodies, and is dependent on the existence of
+points on this surface which are distinguishable from each other. But
+we can free ourselves from both of these limitations without altering
+the nature of our specification of position. If, for instance, a cloud
+is hovering over Times Square, then we can determine its position
+relative to the surface of the earth by erecting a pole
+perpendicularly on the Square, so that it reaches the cloud. The
+length of the pole measured with the standard measuring-rod, combined
+with the specification of the position of the foot of the pole,
+supplies us with a complete place specification. On the basis of this
+illustration, we are able to see the manner in which a refinement of
+the conception of position has been developed.
+
+(a) We imagine the rigid body, to which the place specification is
+referred, supplemented in such a manner that the object whose position
+we require is reached by. the completed rigid body.
+
+(b) In locating the position of the object, we make use of a number
+(here the length of the pole measured with the measuring-rod) instead
+of designated points of reference.
+
+(c) We speak of the height of the cloud even when the pole which
+reaches the cloud has not been erected. By means of optical
+observations of the cloud from different positions on the ground, and
+taking into account the properties of the propagation of light, we
+determine the length of the pole we should have required in order to
+reach the cloud.
+
+From this consideration we see that it will be advantageous if, in the
+description of position, it should be possible by means of numerical
+measures to make ourselves independent of the existence of marked
+positions (possessing names) on the rigid body of reference. In the
+physics of measurement this is attained by the application of the
+Cartesian system of co-ordinates.
+
+This consists of three plane surfaces perpendicular to each other and
+rigidly attached to a rigid body. Referred to a system of
+co-ordinates, the scene of any event will be determined (for the main
+part) by the specification of the lengths of the three perpendiculars
+or co-ordinates (x, y, z) which can be dropped from the scene of the
+event to those three plane surfaces. The lengths of these three
+perpendiculars can be determined by a series of manipulations with
+rigid measuring-rods performed according to the rules and methods laid
+down by Euclidean geometry.
+
+In practice, the rigid surfaces which constitute the system of
+co-ordinates are generally not available ; furthermore, the magnitudes
+of the co-ordinates are not actually determined by constructions with
+rigid rods, but by indirect means. If the results of physics and
+astronomy are to maintain their clearness, the physical meaning of
+specifications of position must always be sought in accordance with
+the above considerations. ***
+
+We thus obtain the following result: Every description of events in
+space involves the use of a rigid body to which such events have to be
+referred. The resulting relationship takes for granted that the laws
+of Euclidean geometry hold for "distances;" the "distance" being
+represented physically by means of the convention of two marks on a
+rigid body.
+
+* Here we have assumed that there is nothing left over i.e. that
+the measurement gives a whole number. This difficulty is got over by
+the use of divided measuring-rods, the introduction of which does not
+demand any fundamentally new method.
+
+**A Einstein used "Potsdamer Platz, Berlin" in the original text.
+In the authorised translation this was supplemented with "Tranfalgar
+Square, London". We have changed this to "Times Square, New York", as
+this is the most well known/identifiable location to English speakers
+in the present day. [Note by the janitor.]
+
+**B It is not necessary here to investigate further the significance
+of the expression "coincidence in space." This conception is
+sufficiently obvious to ensure that differences of opinion are
+scarcely likely to arise as to its applicability in practice.
+
+*** A refinement and modification of these views does not become
+necessary until we come to deal with the general theory of relativity,
+treated in the second part of this book.
+
+The purpose of mechanics is to describe how bodies change their
+position in space with "time." I should load my conscience with grave
+sins against the sacred spirit of lucidity were I to formulate the
+aims of mechanics in this way, without serious reflection and detailed
+explanations. Let us proceed to disclose these sins.
+
+It is not clear what is to be understood here by "position" and
+"space." I stand at the window of a railway carriage which is
+travelling uniformly, and drop a stone on the embankment, without
+throwing it. Then, disregarding the influence of the air resistance, I
+see the stone descend in a straight line. A pedestrian who observes
+the misdeed from the footpath notices that the stone falls to earth in
+a parabolic curve. I now ask: Do the "positions" traversed by the
+stone lie "in reality" on a straight line or on a parabola? Moreover,
+what is meant here by motion "in space" ? From the considerations of
+the previous section the answer is self-evident. In the first place we
+entirely shun the vague word "space," of which, we must honestly
+acknowledge, we cannot form the slightest conception, and we replace
+it by "motion relative to a practically rigid body of reference." The
+positions relative to the body of reference (railway carriage or
+embankment) have already been defined in detail in the preceding
+section. If instead of " body of reference " we insert " system of
+co-ordinates," which is a useful idea for mathematical description, we
+are in a position to say : The stone traverses a straight line
+relative to a system of co-ordinates rigidly attached to the carriage,
+but relative to a system of co-ordinates rigidly attached to the
+ground (embankment) it describes a parabola. With the aid of this
+example it is clearly seen that there is no such thing as an
+independently existing trajectory (lit. "path-curve"*), but only
+a trajectory relative to a particular body of reference.
+
+In order to have a complete description of the motion, we must specify
+how the body alters its position with time ; i.e. for every point on
+the trajectory it must be stated at what time the body is situated
+there. These data must be supplemented by such a definition of time
+that, in virtue of this definition, these time-values can be regarded
+essentially as magnitudes (results of measurements) capable of
+observation. If we take our stand on the ground of classical
+mechanics, we can satisfy this requirement for our illustration in the
+following manner. We imagine two clocks of identical construction ;
+the man at the railway-carriage window is holding one of them, and the
+man on the footpath the other. Each of the observers determines the
+position on his own reference-body occupied by the stone at each tick
+of the clock he is holding in his hand. In this connection we have not
+taken account of the inaccuracy involved by the finiteness of the
+velocity of propagation of light. With this and with a second
+difficulty prevailing here we shall have to deal in detail later.

@@ -8,11 +8,13 @@ using .Utls
 TextTiling is a method for finding segment boundaries based on lexical cohesion and similarity between adjacent blocks.
 # Arguments
 - `window_size`: Sliding window size.
+- `do_smooth`: If true, smoothing depth scores.
 - `smooth_window_size`: Window size for smoothing depth scores.
 - `tokenizer`: Tokenizer for word segmentation.
 """
 mutable struct SegmentObject
     window_size::Int
+    do_smooth::Bool
     smooth_window_size::Int
     tokenizer::Any
 end
@@ -124,21 +126,23 @@ Performs the splitting of the document entered in the `document` argument.
 using TextSegmentation
 
 window_size = 2
+do_smooth = false
 smooth_window_size = 1
 num_topics = 3
-
-tt = TextTiling.SegmentObject(window_size, smooth_window_size, Utls.tokenize)
+tt = TextTiling.SegmentObject(window_size, do_smooth, smooth_window_size, Utls.tokenize)
 result = TextTiling.segment(tt, document, num_topics)
 println(result)
-000100010000
+00010001000
 ```
 """
 function segment(seg, document, num_topics=Nothing)
     preprocessed_document = preprocessing(seg, document)
     gap_score = calculate_gap_score(seg, preprocessed_document)
     depth_score = calculate_depth_score(seg, gap_score)
-    smooth_depth_score = smoothing(seg, depth_score)
-    return determine_boundaries(seg, smooth_depth_score, num_topics)
+    if seg.do_smooth
+        depth_score = smoothing(seg, depth_score)
+    end
+    return determine_boundaries(seg, depth_score, num_topics)
 end
 end
 

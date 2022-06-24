@@ -8,12 +8,14 @@ using .Utls
 TopicTiling is an extension of TextTiling that uses the topic IDs of words in a sentence to calculate the similarity between blocks.
 # Arguments
 - `window_size`: Sliding window size.
+- `do_smooth`: If true, smoothing depth scores.
 - `smooth_window_size`: Window size for smoothing depth scores.
 - `lda_model`: Trained LDA topic model.
 - `dictionary`: A dictionary showing word-id mappings.
 """
 mutable struct SegmentObject
     window_size::Int
+    do_smooth::Bool
     smooth_window_size::Int
     lda_model::Any
     dictionary::Any
@@ -22,24 +24,19 @@ end
 function preprocessing(seg::SegmentObject, tokenized_document)
     n = length(tokenized_document)
     seg.window_size = maximum([minimum([seg.window_size, n / 3]), 1])
-    return [
-        Utls.count_elements(
-            aggregate_topic_id(
-                seg.lda_model.get_document_topics(
-                    seg.dictionary.doc2bow(tokenized_document[i]),
-                    per_word_topics = true,
-                )[2],
-            ),
-        ) for i = 1:n
-    ]
-end
-
-function aggregate_topic_id(ids)
-    sentence_ids = []
-    for i in ids
-        append!(sentence_ids, string.(i[2]))
+    preprocessed_document = []
+    for i = 1:n
+        sentence_ids = []
+        for w in seg.dictionary.doc2bow(tokenized_document[i])
+            topic_id = seg.lda_model.get_term_topics(w[1])
+            if topic_id != []
+                append!(sentence_ids, [string.(sort(topic_id, by=last)[end][1])])
+            end
+        end
+        append!(preprocessed_document, [Utls.count_elements(sentence_ids)])
     end
-    return sentence_ids
+
+    return preprocessed_document
 end
 
 function calculate_gap_score(seg::SegmentObject, preprocessed_document)
@@ -147,6 +144,24 @@ pygensim = pyimport("gensim")
 # train_document
 # Data to be used when training the LDA topic model.
 # Data from the same domain as the text to be segmented is preferred.
+
+function read_file(file_path)
+    f = open(file_path, "r")
+    return filter((i) -> length(i) > 5, split.(lowercase(replace.(read(f, String), "\r"=>"")), "\n"))
+    close(f)
+end
+
+file_path = [
+    "/data/Relativity the Special and General Theory.txt",
+    "/data/On Liberty.txt",
+    "/data/Dream Psychology Psychoanalysis for Beginners.txt",
+]
+
+train_document = []
+for i in file_path
+    append!(train_document, read_file(i))
+end
+
 tokenized_train_document = [Utls.tokenize(i) for i in train_document]
 dictionary = pygensim.corpora.Dictionary(tokenized_train_document)
 corpus = [dictionary.doc2bow(text) for text in tokenized_train_document]
@@ -160,12 +175,13 @@ lda_model = pygensim.models.ldamodel.LdaModel(
 
 # TopicTiling
 window_size = 2
+do_smooth = false
 smooth_window_size = 1
 num_topics = 3
-to = TopicTiling.SegmentObject(window_size, smooth_window_size, lda_model, dictionary)
+to = TopicTiling.SegmentObject(window_size, do_smooth, smooth_window_size, lda_model, dictionary)
 result = TopicTiling.segment(to, document, num_topics)
 println(result)
-000110000000
+00010010000
 ```
 """
 function segment(seg, test_document, num_topics=Nothing)
@@ -173,7 +189,9 @@ function segment(seg, test_document, num_topics=Nothing)
     preprocessed_document = preprocessing(seg, tokenized_test_document)
     gap_score = calculate_gap_score(seg, preprocessed_document)
     depth_score = calculate_depth_score(seg, gap_score)
-    smooth_depth_score = smoothing(seg, depth_score)
-    return determine_boundaries(seg, smooth_depth_score, num_topics)
+    if seg.do_smooth
+        depth_score = smoothing(seg, depth_score)
+    end
+    return determine_boundaries(seg, depth_score, num_topics)
 end
 end

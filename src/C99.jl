@@ -5,7 +5,7 @@ using .Utls
 
 """
     C99.SegmentObject(window_size, similarity_matrix, rank_matrix, sum_matrix, std_coeff, tokenizer)
-C99 is a method for determining segment boundaries through divisive clustering.
+C99 is a method for determining segment boundaries through segmented clustering.
 # Arguments
 - `window_size`: window_size is used to create a rank matrix and specifies the range of adjacent sentences to be referenced.
 - `similarity_matrix`: Matrix of calculated cosine similarity between sentences.
@@ -207,7 +207,7 @@ std_coeff = 1.2
 c99 = C99.SegmentObject(window_size, init_matrix, init_matrix, init_matrix, std_coeff, Utls.tokenize)
 result = C99.segment(c99, document, n)
 println(result)
-000100010000
+00010001000
 ```
 """
 function segment(seg, document, n)
