@@ -57,7 +57,7 @@ window_size = 2
 do_smooth = false
 smooth_window_size = 1
 num_topics = 3
-tt = TextTiling.SegmentObject(window_size, do_smooth, smooth_window_size, Utls.tokenize)
+tt = TextTiling.SegmentObject(window_size, do_smooth, smooth_window_size, Utils.tokenize)
 result = TextTiling.segment(tt, document, num_topics)
 println(result)
 >>> 00010001000
@@ -65,7 +65,7 @@ println(result)
  - TextTiling is a method for finding segment boundaries based on lexical cohesion and similarity between adjacent blocks.
  - window_size is the size of the block and smooth_window_size is set to smooth the depth score.
  - num_topics is the number of topics in the document. If this value is specified, segment boundaries are determined by the number of num_topics, starting with the highest depth score.
- - Utls.tokenize is a tokenizer for word segmentation of sentences; other languages can be supported by changing the tokenizer.
+ - Utils.tokenize is a tokenizer for word segmentation of sentences; other languages can be supported by changing the tokenizer.
 
 ## C99
 ```julia
@@ -73,7 +73,7 @@ n = length(document)
 init_matrix = zeros(n, n)
 window_size = 2
 std_coeff = 1.2
-c99 = C99.SegmentObject(window_size, init_matrix, init_matrix, init_matrix, std_coeff, Utls.tokenize)
+c99 = C99.SegmentObject(window_size, init_matrix, init_matrix, init_matrix, std_coeff, Utils.tokenize)
 result = C99.segment(c99, document, n)
 println(result)
 >>> 00010001000
@@ -113,7 +113,7 @@ for i in file_path
     append!(train_document, read_file(i))
 end
 
-tokenized_train_document = [Utls.tokenize(i) for i in train_document]
+tokenized_train_document = [Utils.tokenize(i) for i in train_document]
 dictionary = pygensim.corpora.Dictionary(tokenized_train_document)
 corpus = [dictionary.doc2bow(text) for text in tokenized_train_document]
 lda_model = pygensim.models.ldamodel.LdaModel(

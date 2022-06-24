@@ -1,7 +1,7 @@
 module TopicTiling
-include("Utls.jl")
+include("Utils.jl")
 using Statistics
-using .Utls
+using .Utils
 
 """
     TopicTiling.SegmentObject(window_size, smooth_window_size, lda_model, dictionary)
@@ -33,7 +33,7 @@ function preprocessing(seg::SegmentObject, tokenized_document)
                 append!(sentence_ids, [string.(sort(topic_id, by=last)[end][1])])
             end
         end
-        append!(preprocessed_document, [Utls.count_elements(sentence_ids)])
+        append!(preprocessed_document, [Utils.count_elements(sentence_ids)])
     end
 
     return preprocessed_document
@@ -45,19 +45,19 @@ function calculate_gap_score(seg::SegmentObject, preprocessed_document)
 
     for i = 1:n
         sz = minimum([minimum([i, n - i]), seg.window_size])
-        left_side, right_side = Utls.SentenceElements(Dict{String,Int}()),
-        Utls.SentenceElements(Dict{String,Int}())
+        left_side, right_side = Utils.SentenceElements(Dict{String,Int}()),
+        Utils.SentenceElements(Dict{String,Int}())
 
         for j = Int(i - sz + 1):Int(i)
-            Utls.merge_elements(left_side, preprocessed_document[j])
+            Utils.merge_elements(left_side, preprocessed_document[j])
         end
 
         for j = Int(i + 1):Int(i + sz)
-            Utls.merge_elements(right_side, preprocessed_document[j])
+            Utils.merge_elements(right_side, preprocessed_document[j])
         end
 
         gap_score[i] =
-            Utls.calculate_cosin_similarity(left_side.elements_dct, right_side.elements_dct)
+            Utils.calculate_cosin_similarity(left_side.elements_dct, right_side.elements_dct)
     end
     return gap_score
 end
@@ -162,7 +162,7 @@ for i in file_path
     append!(train_document, read_file(i))
 end
 
-tokenized_train_document = [Utls.tokenize(i) for i in train_document]
+tokenized_train_document = [Utils.tokenize(i) for i in train_document]
 dictionary = pygensim.corpora.Dictionary(tokenized_train_document)
 corpus = [dictionary.doc2bow(text) for text in tokenized_train_document]
 lda_model = pygensim.models.ldamodel.LdaModel(
@@ -185,7 +185,7 @@ println(result)
 ```
 """
 function segment(seg, test_document, num_topics=Nothing)
-    tokenized_test_document = [Utls.tokenize(i) for i in test_document]
+    tokenized_test_document = [Utils.tokenize(i) for i in test_document]
     preprocessed_document = preprocessing(seg, tokenized_test_document)
     gap_score = calculate_gap_score(seg, preprocessed_document)
     depth_score = calculate_depth_score(seg, gap_score)

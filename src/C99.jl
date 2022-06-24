@@ -1,7 +1,7 @@
 module C99
-include("Utls.jl")
+include("Utils.jl")
 using Statistics
-using .Utls
+using .Utils
 
 """
     C99.SegmentObject(window_size, similarity_matrix, rank_matrix, sum_matrix, std_coeff, tokenizer)
@@ -31,14 +31,14 @@ function preprocessing(seg::SegmentObject, document)
     end
 
     seg.window_size = minimum([seg.window_size, n])
-    return [Utls.count_elements(seg.tokenizer(document[i])) for i = 1:n]
+    return [Utils.count_elements(seg.tokenizer(document[i])) for i = 1:n]
 end
 
 function create_similarity_matrix(seg::SegmentObject, n, preprocessed_document)
     seg.similarity_matrix = zeros(n, n)
     for i = 1:n
         for j = i:n
-            seg.similarity_matrix[i, j] = Utls.calculate_cosin_similarity(
+            seg.similarity_matrix[i, j] = Utils.calculate_cosin_similarity(
                 preprocessed_document[i],
                 preprocessed_document[j],
             )
@@ -204,7 +204,7 @@ init_matrix = zeros(n, n)
 window_size = 2
 std_coeff = 1.2
 
-c99 = C99.SegmentObject(window_size, init_matrix, init_matrix, init_matrix, std_coeff, Utls.tokenize)
+c99 = C99.SegmentObject(window_size, init_matrix, init_matrix, init_matrix, std_coeff, Utils.tokenize)
 result = C99.segment(c99, document, n)
 println(result)
 00010001000

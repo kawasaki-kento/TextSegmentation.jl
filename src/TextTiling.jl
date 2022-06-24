@@ -1,7 +1,7 @@
 module TextTiling
-include("Utls.jl")
+include("Utils.jl")
 using Statistics
-using .Utls
+using .Utils
 
 """
     TextTiling.SegmentObject(window_size, smooth_window_size, tokenizer)
@@ -23,7 +23,7 @@ function preprocessing(seg::SegmentObject, document)
     n = length(document)
     @assert n > 0 && length([d for d in document if typeof(d) != String]) == 0
     seg.window_size = maximum([minimum([seg.window_size, n / 3]), 1])
-    return [Utls.count_elements(seg.tokenizer(document[i])) for i = 1:n]
+    return [Utils.count_elements(seg.tokenizer(document[i])) for i = 1:n]
 end
 
 function calculate_gap_score(seg::SegmentObject, preprocessed_document)
@@ -32,19 +32,19 @@ function calculate_gap_score(seg::SegmentObject, preprocessed_document)
 
     for i = 1:n
         sz = minimum([minimum([i, n - i]), seg.window_size])
-        left_side, right_side = Utls.SentenceElements(Dict{String,Int}()),
-        Utls.SentenceElements(Dict{String,Int}())
+        left_side, right_side = Utils.SentenceElements(Dict{String,Int}()),
+        Utils.SentenceElements(Dict{String,Int}())
 
         for j = Int(i - sz + 1):Int(i)
-            Utls.merge_elements(left_side, preprocessed_document[j])
+            Utils.merge_elements(left_side, preprocessed_document[j])
         end
 
         for j = Int(i + 1):Int(i + sz)
-            Utls.merge_elements(right_side, preprocessed_document[j])
+            Utils.merge_elements(right_side, preprocessed_document[j])
         end
 
         gap_score[i] =
-            Utls.calculate_cosin_similarity(left_side.elements_dct, right_side.elements_dct)
+            Utils.calculate_cosin_similarity(left_side.elements_dct, right_side.elements_dct)
     end
     return gap_score
 end
@@ -129,7 +129,7 @@ window_size = 2
 do_smooth = false
 smooth_window_size = 1
 num_topics = 3
-tt = TextTiling.SegmentObject(window_size, do_smooth, smooth_window_size, Utls.tokenize)
+tt = TextTiling.SegmentObject(window_size, do_smooth, smooth_window_size, Utils.tokenize)
 result = TextTiling.segment(tt, document, num_topics)
 println(result)
 00010001000

@@ -1,4 +1,4 @@
-module Utls
+module Utils
 using Languages
 stop_words = stopwords(Languages.English())
 

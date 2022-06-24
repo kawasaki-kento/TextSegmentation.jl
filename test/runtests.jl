@@ -42,7 +42,7 @@ document = [
     do_smooth = false
     smooth_window_size = 1
     num_topics = 3
-    tt = TextTiling.SegmentObject(window_size, do_smooth, smooth_window_size, Utls.tokenize)
+    tt = TextTiling.SegmentObject(window_size, do_smooth, smooth_window_size, Utils.tokenize)
     result = TextTiling.segment(tt, document, num_topics)
     @test result == "00010001000"
 end
@@ -52,7 +52,7 @@ end
     init_matrix = zeros(n, n)
     window_size = 2
     std_coeff = 1.2
-    c99 = C99.SegmentObject(window_size, init_matrix, init_matrix, init_matrix, std_coeff, Utls.tokenize)
+    c99 = C99.SegmentObject(window_size, init_matrix, init_matrix, init_matrix, std_coeff, Utils.tokenize)
     result = C99.segment(c99, document, n)
     @test result == "00010001000"
 end
@@ -60,7 +60,7 @@ end
 @testset "TopicTiling.jl" begin
     # LDA Topic Model
     pygensim = pyimport("gensim")
-    tokenized_train_document = [Utls.tokenize(i) for i in train_document]
+    tokenized_train_document = [Utils.tokenize(i) for i in train_document]
     dictionary = pygensim.corpora.Dictionary(tokenized_train_document)
     corpus = [dictionary.doc2bow(text) for text in tokenized_train_document]
     lda_model = pygensim.models.ldamodel.LdaModel(
