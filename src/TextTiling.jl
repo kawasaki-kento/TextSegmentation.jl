@@ -4,7 +4,7 @@ using Statistics
 using .Utils
 
 """
-    TextTiling.SegmentObject(window_size, smooth_window_size, tokenizer)
+    TextTiling.SegmentObject(window_size, do_smooth, smooth_window_size, tokenizer)
 TextTiling is a method for finding segment boundaries based on lexical cohesion and similarity between adjacent blocks.
 # Arguments
 - `window_size`: Sliding window size.
@@ -43,8 +43,10 @@ function calculate_gap_score(seg::SegmentObject, preprocessed_document)
             Utils.merge_elements(right_side, preprocessed_document[j])
         end
 
-        gap_score[i] =
-            Utils.calculate_cosin_similarity(left_side.elements_dct, right_side.elements_dct)
+        gap_score[i] = Utils.calculate_cosin_similarity(
+            left_side.elements_dct,
+            right_side.elements_dct,
+        )
     end
     return gap_score
 end
@@ -135,7 +137,7 @@ println(result)
 00010001000
 ```
 """
-function segment(seg, document, num_topics=Nothing)
+function segment(seg, document, num_topics = Nothing)
     preprocessed_document = preprocessing(seg, document)
     gap_score = calculate_gap_score(seg, preprocessed_document)
     depth_score = calculate_depth_score(seg, gap_score)

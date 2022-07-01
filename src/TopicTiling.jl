@@ -4,7 +4,7 @@ using Statistics
 using .Utils
 
 """
-    TopicTiling.SegmentObject(window_size, smooth_window_size, lda_model, dictionary)
+    TopicTiling.SegmentObject(window_size, do_smooth, smooth_window_size, lda_model, dictionary)
 TopicTiling is an extension of TextTiling that uses the topic IDs of words in a sentence to calculate the similarity between blocks.
 # Arguments
 - `window_size`: Sliding window size.
@@ -30,7 +30,7 @@ function preprocessing(seg::SegmentObject, tokenized_document)
         for w in seg.dictionary.doc2bow(tokenized_document[i])
             topic_id = seg.lda_model.get_term_topics(w[1])
             if topic_id != []
-                append!(sentence_ids, [string.(sort(topic_id, by=last)[end][1])])
+                append!(sentence_ids, [string.(sort(topic_id, by = last)[end][1])])
             end
         end
         append!(preprocessed_document, [Utils.count_elements(sentence_ids)])
@@ -56,8 +56,10 @@ function calculate_gap_score(seg::SegmentObject, preprocessed_document)
             Utils.merge_elements(right_side, preprocessed_document[j])
         end
 
-        gap_score[i] =
-            Utils.calculate_cosin_similarity(left_side.elements_dct, right_side.elements_dct)
+        gap_score[i] = Utils.calculate_cosin_similarity(
+            left_side.elements_dct,
+            right_side.elements_dct,
+        )
     end
     return gap_score
 end
@@ -184,7 +186,7 @@ println(result)
 00010010000
 ```
 """
-function segment(seg, test_document, num_topics=Nothing)
+function segment(seg, test_document, num_topics = Nothing)
     tokenized_test_document = [Utils.tokenize(i) for i in test_document]
     preprocessed_document = preprocessing(seg, tokenized_test_document)
     gap_score = calculate_gap_score(seg, preprocessed_document)
